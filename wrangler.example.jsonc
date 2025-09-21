@@ -1,0 +1,29 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "srtnr-mini",
+  "main": "src/worker.ts",
+  "compatibility_date": "2025-09-01",
+  "observability": {
+	"enabled": true
+  },
+
+
+  "kv_namespaces": [
+	{
+	  "binding": "URL_KV",
+	  "id": "<KV_ID>"
+	}
+	,
+	{
+	  "binding": "LINK_CLICKS_KV",	
+	  "id": "<KV_ID>"
+	}
+  ],
+  "secrets_store_secrets": [
+	  {
+		"binding": "API_KEYS", // don't change this, it's how your worker accesses the secret
+		"store_id": "<STORE_ID>",
+		"secret_name": "API_KEY_WHITELIST" // this is the name of the secret, you can change this
+	  }
+	]
+}
