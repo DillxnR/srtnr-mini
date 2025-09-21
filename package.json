@@ -1,0 +1,20 @@
+{
+  "name": "srtnr-mini",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/worker.ts",
+  "scripts": {
+    "dev": "pnpm run wrangler dev",
+    "deploy": "pnpm run wrangler deploy"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.15.1",
+
+  
+  "dependencies": {
+    "itty-router": "^5.0.22"
+  }
+}
+
