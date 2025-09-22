@@ -15,7 +15,7 @@ a simple, lightweight, headless url shortener written in typescript that uses cl
 ## quickstart
 
 ### prerequisites
-- Cloudflare account and Wrangler CLI (`npm i -g wrangler`)
+- Cloudflare account and Wrangler CLI (`pnpm i -g wrangler`)
 - pnpm
 
 ### install
@@ -24,70 +24,30 @@ pnpm i
 ```
 
 ### configure wrangler bindings
-in `wrangler.jsonc`:
-
-```jsonc
-{
-  "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "srtnr-mini",
-  "main": "src/worker.ts",
-  "compatibility_date": "2025-09-01",
-  "kv_namespaces": [
-    { "binding": "URL_KV", "id": "<your-kv-id>" },
-    { "binding": "LINK_CLICKS_KV", "id": "<your-clicks-kv-id>" }
-  ],
-  "secrets_store_secrets": [
-    {
-      // important: binding must be API_KEYS to match the worker code
-      "binding": "API_KEYS",
-      "store_id": "<your-store-id>",
-      // name of the secret object inside the store (you choose it)
-      "secret_name": "API_KEYS"
-    }
-  ]
-}
-```
+see `wrangler.example.jsonc` for an example.
 
 notes:
 - `binding` is the variable exposed to your worker (must be `API_KEYS` to match `env.API_KEYS`).
 - `secret_name` is the secret object in your store; you can keep it `API_KEYS` or use another name.
 
 ### local development
-- Create `.dev.vars` (dotenv format), value is a JSON array of allowed keys:
+- create `.dev.vars` (dotenv format), value is a JSON array of allowed keys:
 
 ```dotenv
 API_KEYS=["your-key-1","your-key-2"]
 ```
 
-- Run local using remote (default) or force local env loading:
+- run local using remote (default) or force local env loading:
 ```bash
 # Remote dev (uses Secrets Store)
-npx wrangler dev
+pnpm wrangler dev
 
-# Local dev (uses .dev.vars)
-npx wrangler dev --local
+# Local dev (uses .dev.vars) -- use this only if you haven't configured the secrets store
+pnpm wrangler dev --local
 ```
 
 ### remote/prod secrets (secrets store)
 create or update a secret named `API_KEYS` in your store with a JSON array value, e.g. `["your-key-1","your-key-2"]`.
-
-cli examples:
-```bash
-# Create or replace secret (interactive prompt)
-npx wrangler secrets-store secret create <store-id> \
-  --name API_KEYS \
-  --scopes workers \
-  --remote
-
-# Non-interactive (value in command history; use with care)
-npx wrangler secrets-store secret create <store-id> \
-  --name API_KEYS \
-  --scopes workers \
-  --remote \
-  --value '["your-key-1","your-key-2"]'
-```
-
----
 
 ## api reference
 
@@ -168,7 +128,7 @@ Edit `.dev.vars`:
 ```dotenv
 API_KEYS=["api-key-1","api-key-2"]
 ```
-Run with `npx wrangler dev --local` to use `.dev.vars`.
+Run with `pnpm wrangler dev --local` to use `.dev.vars`.
 
 ### rotate keys
 - Update both `.dev.vars` and Secrets Store to include the new key.
@@ -179,7 +139,7 @@ Run with `npx wrangler dev --local` to use `.dev.vars`.
 
 ## deploy
 ```bash
-npx wrangler deploy
+pnpm wrangler deploy
 ```
 
 your worker will be available at `https://<your-worker>.workers.dev`. 
