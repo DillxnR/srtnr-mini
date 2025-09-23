@@ -23,9 +23,9 @@ interface StoredLink {
 }
 
 // generate slugs: 6 characters, but you can change this by changing the `6` in the for loop to the number of characters you want.
-// alphanumeric - a-z, A-Z, 0-9
+// alphanumeric - a-z, 0-9
 function generateSlug(): string {
-  const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
   let slug = '';
   for (let i = 0; i < 6; i++) {
     slug += chars[Math.floor(Math.random() * chars.length)];
@@ -41,7 +41,7 @@ async function getUniqueSlug(kv: KVNamespaceCompat, customSlug?: string, retries
     const existing = await kv.get(slug);
     if (!existing) return slug;
     if (customSlug) throw new Error('Custom slug already exists');
-    slug = generateSlug(); // Retry only for auto-gen
+    slug = generateSlug();
   }
   throw new Error('Failed to generate unique slug after retries');
 }
@@ -55,9 +55,6 @@ export interface Env {
 // this function validates the api key.
 // it extracts the api key from the request headers and validates it.
 // it also checks if the api key is in the secrets store.
-// if the api key is not in the secrets store, it returns null.
-// if the api key is in the secrets store, it returns the api key.
-// if the api key is not in the secrets store, it returns null.
 async function validateApiKey(request: Request, env: Env): Promise<string[] | null> {
   const authHeader = request.headers.get('Authorization');
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
